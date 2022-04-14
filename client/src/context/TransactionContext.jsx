@@ -25,7 +25,17 @@ const createEthereumContract = () => {
 };
 
 export const TransactionsProvider = ({ children }) => {
+  const [formData, setformData] = useState({
+    addressTo: "",
+    amount: "",
+    keyword: "",
+    message: "",
+  });
   const [currentAccount, setCurrentAccount] = useState("");
+
+  const handleChange = (e, name) => {
+    setformData((prevState) => ({ ...prevState, [name]: e.target.value }));
+  };
 
   const checkIfWalletIsConnect = async () => {
     try {
@@ -63,13 +73,32 @@ export const TransactionsProvider = ({ children }) => {
     }
   };
 
+  const sendTransaction = async () => {
+    try {
+      if (ethereum) {
+        const { addressTo, amount, keyword, message } = formData;
+        const transactionsContract = createEthereumContract();
+      }
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("No ethereum object");
+    }
+  };
+
   useEffect(() => {
     checkIfWalletIsConnect();
   }, []);
 
   return (
     <TransactionContext.Provider
-      value={{ connectWallet, currentAccount, value: "test" }}
+      value={{
+        connectWallet,
+        currentAccount,
+        value: "test",
+        handleChange,
+        formData,
+      }}
     >
       {children}
     </TransactionContext.Provider>
